@@ -1,7 +1,7 @@
 package com.tanks.objects;
 
 import com.tanks.objects.constants.Const;
-import com.tanks.objects.constants.Images;
+import com.tanks.objects.constants.Resources;
 import com.tanks.objects.piece.Brick;
 import com.tanks.objects.piece.Piece;
 import com.tanks.objects.piece.Shell;
@@ -37,12 +37,13 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
         keysPressed = new HashSet<>();
         gameMap = new GameMap();
+        //gameMap.saveGameMap(Resources.LVL_ROOT + "1.lvl");
+        gameMap.loadGameMap(Resources.LVL_ROOT + "1.lvl");
         shells = new LinkedList<>();
         tanks = new LinkedList<>();
 
-        player1 = new Tank(0, 0, Images.GOLD_TANK_IMG, Direction.RIGHT, Const.LIVES, 0);
-        player2 = new Tank(Const.FIELD_WIDTH, Const.FIELD_HEIGHT, Images.SILVER_TANK_IMG,
-                Direction.LEFT, Const.LIVES, 0);
+        player1 = gameMap.getPlayer1();
+        player2 = gameMap.getPlayer2();
         tanks.add(player1);
         tanks.add(player2);
 

@@ -2,7 +2,7 @@ package com.tanks.objects.piece;
 
 import com.tanks.objects.Direction;
 import com.tanks.objects.constants.Const;
-import com.tanks.objects.constants.Images;
+import com.tanks.objects.constants.Resources;
 import com.tanks.objects.statics.Rotator;
 
 public class Tank extends Piece {
@@ -13,7 +13,7 @@ public class Tank extends Piece {
     public Tank(int x, int y, String imgPath, Direction direction, int lives, int hits) {
         super(
                 x, y,
-                (imgPath.isEmpty() || imgPath == null) ? Images.GREEN_TANK_IMG : imgPath,
+                (imgPath.isEmpty() || imgPath == null) ? Resources.GREEN_TANK_IMG : imgPath,
                 Direction.UP);
         this.lives = lives;
         this.hits = hits;

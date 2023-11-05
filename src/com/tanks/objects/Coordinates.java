@@ -1,8 +1,11 @@
 package com.tanks.objects;
 
-import com.tanks.objects.constants.Const;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private int x;
     private int y;
     private int xCorrector;

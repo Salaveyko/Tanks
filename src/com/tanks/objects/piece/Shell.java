@@ -1,7 +1,7 @@
 package com.tanks.objects.piece;
 
 import com.tanks.objects.Direction;
-import com.tanks.objects.constants.Images;
+import com.tanks.objects.constants.Resources;
 import com.tanks.objects.statics.Rotator;
 
 public class Shell extends Piece {
@@ -9,7 +9,7 @@ public class Shell extends Piece {
     private boolean detonate;
 
     public Shell(Tank owner) {
-        this(owner.getX(), owner.getY(), Images.SHELL, owner.getDirection(), owner);
+        this(owner.getX(), owner.getY(), Resources.SHELL, owner.getDirection(), owner);
         detonate = false;
     }
 

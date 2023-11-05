@@ -4,13 +4,17 @@ import com.tanks.objects.Coordinates;
 import com.tanks.objects.Direction;
 import com.tanks.objects.constants.Const;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
-public abstract class Piece {
+public abstract class Piece  implements Serializable {
+    protected static final long serialVersionUID = 1L;
     protected Coordinates coordinates;
-    protected Image img;
+    protected transient Image img;
     protected Direction direction;
 
     public Piece(int x, int y, String imgPath, Direction direction) {
@@ -135,5 +139,25 @@ public abstract class Piece {
         if(getX() - xCorr < 0){
             setX(xCorr);
         }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        if(img != null){
+            BufferedImage bufImg = new BufferedImage(
+                    img.getWidth(null),
+                    img.getHeight(null),
+                    BufferedImage.TYPE_INT_ARGB
+            );
+            Graphics2D g2d = bufImg.createGraphics();
+            g2d.drawImage(img, 0, 0, null);
+            g2d.dispose();
+            ImageIO.write(bufImg, "png", out);
+        }
+    }
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        img = ImageIO.read(in);
     }
 }
