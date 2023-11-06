@@ -1,11 +1,17 @@
 package com.tanks.objects;
 
+import com.tanks.objects.constants.Const;
+import com.tanks.objects.constants.Resources;
 import com.tanks.objects.piece.Brick;
+import com.tanks.objects.piece.Eagle;
 import com.tanks.objects.piece.Tank;
 
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GameMap implements Serializable {
     @Serial
@@ -15,7 +21,6 @@ public class GameMap implements Serializable {
     private Tank player2;
 
     public GameMap() {}
-
 
     public void loadGameMap(String filePath) {
         GameMap gm;
@@ -30,7 +35,61 @@ public class GameMap implements Serializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            loadDefaultMap();
         }
+    }
+    private void loadDefaultMap() {
+        int xElements = Const.FIELD_WIDTH / Const.BRICK_SIZE; //22
+        int yElements = Const.FIELD_HEIGHT / Const.BRICK_SIZE; //12
+        Brick[][] arr = new Brick[yElements][xElements];
+
+        int[][] a = {
+                {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+                {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+                {3, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 3},
+                {3, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3},
+                {3, 3, 0, 0, 0, 3, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 0, 0, 0, 0, 3},
+                {2, 3, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 3, 3},
+                {3, 3, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 3, 2},
+                {3, 0, 0, 0, 0, 3, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 0, 0, 0, 3, 3},
+                {3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 3},
+                {3, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 3},
+                {3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
+                {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}
+        };
+        int eagles = 0;
+
+        for (int i = 0; i < yElements; i++) {
+            for (int j = 0; j < xElements; j++) {
+
+                int x = j * Const.BRICK_SIZE;
+                int y = i * Const.BRICK_SIZE;
+
+                if (a[i][j] == 1) {
+                    if (getPlayer1() == null) {
+                        player1 = new Tank(x + 5, y, Resources.GOLD_TANK_IMG, Direction.RIGHT, Const.LIVES, 0);
+                    } else {
+                        player2 = new Tank(x + 5, y, Resources.SILVER_TANK_IMG, Direction.LEFT, Const.LIVES, 0);
+                    }
+                } else if (a[i][j] == 2) {
+                    if (eagles == 0) {
+                        arr[i][j] = new Eagle(x, y + 6, Resources.GOLDEN_EAGLE, Direction.UP, player1);
+                        eagles++;
+                    } else {
+                        arr[i][j] = new Eagle(x, y + 6, Resources.SILVER_EAGLE, Direction.UP, player2);
+                    }
+                } else if (a[i][j] == 3) {
+                    arr[i][j] = new Brick(x, y, Resources.BRICK, Direction.UP, false);
+                } else if (a[i][j] == 4) {
+                    arr[i][j] = new Brick(x, y, Resources.IRON_BRICK, Direction.UP, true);
+                }
+            }
+        }
+
+        bricks = Arrays.stream(arr)
+                .flatMap(Arrays::stream)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public void saveGameMap(String filePath) {

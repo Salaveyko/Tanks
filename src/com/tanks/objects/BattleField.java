@@ -2,10 +2,7 @@ package com.tanks.objects;
 
 import com.tanks.objects.constants.Const;
 import com.tanks.objects.constants.Resources;
-import com.tanks.objects.piece.Brick;
-import com.tanks.objects.piece.Piece;
-import com.tanks.objects.piece.Shell;
-import com.tanks.objects.piece.Tank;
+import com.tanks.objects.piece.*;
 import com.tanks.objects.statics.Move;
 
 import javax.swing.*;
@@ -21,6 +18,7 @@ import java.util.Set;
 
 public class BattleField extends JPanel implements ActionListener, KeyListener {
 
+    private boolean gameOver;
     private final Timer timer;
     private final GameMap gameMap;
     private final Tank player1;
@@ -31,6 +29,8 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
     private final List<Shell> shells;
 
     public BattleField() {
+        gameOver = false;
+
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -66,8 +66,6 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
         for (Tank t : tanks) {
             if (t.getLives() > 0) {
                 t.paint(g);
-            } else {
-                tanks.remove(t);
             }
         }
 
@@ -79,14 +77,25 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
     private void detonator(Shell shell, Piece piece) {
         shells.remove(shell);
+
         if (piece instanceof Shell) {
             shells.remove(piece);
         } else if (piece instanceof Brick b) {
             if (!b.isSolid()) {
+                if (piece instanceof Eagle) {
+                    gameOver = true;
+                }
                 gameMap.removeBrick(b);
             }
         } else if (piece instanceof Tank t) {
             t.setLives(t.getLives() - 1);
+
+            if (t.getLives() <= 0) {
+                if (t == player1 || t == player2) {
+                    gameOver = true;
+                }
+                tanks.remove(t);
+            }
         }
     }
 
@@ -146,7 +155,7 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
     private void updateMoves() {
         //player 1 controls
-        if(player1.getLives() > 0) {
+        if (player1.getLives() > 0) {
             if (keysPressed.contains(KeyEvent.VK_UP) && !player1.turn(Direction.UP)) {
                 movePiece(player1);
             }
@@ -160,16 +169,12 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
                 movePiece(player1);
             }
             if (keysPressed.contains(KeyEvent.VK_SPACE)) {
-                if (player1.CanShot()) {
-                    shells.add(new Shell(player1));
-                    player1.setCanShot(false);
-                    player1.startCooldown();
-                }
+                shotHim(player1);
             }
         }
 
         //player 2 controls
-        if(player2.getLives() > 0) {
+        if (player2.getLives() > 0) {
             if (keysPressed.contains(KeyEvent.VK_W) && !player2.turn(Direction.UP)) {
                 movePiece(player2);
             }
@@ -183,28 +188,31 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
                 movePiece(player2);
             }
             if (keysPressed.contains(KeyEvent.VK_SHIFT)) {
-                if (player2.CanShot()) {
-                    shells.add(new Shell(player2));
-                    player2.setCanShot(false);
-                    player2.startCooldown();
-                }
+                shotHim(player2);
             }
         }
 
         repaint();
     }
 
+    private void shotHim(Tank t) {
+        if (t.CanShot() && !gameOver) {
+            shells.add(new Shell(player2));
+            t.setCanShot(false);
+            t.startCooldown();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        //update shells positions
-        for (int i = 0; i < shells.size(); i++) {
-            movePiece(shells.get(i));
-        }
+            //update shells positions
+            for (int i = 0; i < shells.size(); i++) {
+                movePiece(shells.get(i));
+            }
+            //updating players positions
+            updateMoves();
 
-        //updating players positions
-        updateMoves();
-
-        repaint();
+            repaint();
     }
 
     @Override
