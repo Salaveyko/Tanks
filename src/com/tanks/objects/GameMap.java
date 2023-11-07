@@ -1,7 +1,7 @@
 package com.tanks.objects;
 
-import com.tanks.objects.constants.Const;
-import com.tanks.objects.constants.Resources;
+import com.tanks.constants.Const;
+import com.tanks.constants.Resources;
 import com.tanks.objects.piece.Brick;
 import com.tanks.objects.piece.Eagle;
 import com.tanks.objects.piece.Tank;

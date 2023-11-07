@@ -1,4 +1,4 @@
-package com.tanks.objects.constants;
+package com.tanks.constants;
 
 public interface Resources {
     String RESOURCES_ROOT = "src/resources/";
@@ -14,6 +14,7 @@ public interface Resources {
 
     String GOLDEN_EAGLE = IMG_ROOT + "goldenEagle.png";
     String SILVER_EAGLE = IMG_ROOT + "silverEagle.png";
+    String HEART = IMG_ROOT + "heart.png";
 
     String BRICK = IMG_ROOT + "brick.png";
     String IRON_BRICK = IMG_ROOT + "ironBrick.png";

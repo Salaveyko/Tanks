@@ -1,7 +1,7 @@
 package com.tanks.objects.piece;
 
+import com.tanks.constants.Resources;
 import com.tanks.objects.Direction;
-import com.tanks.objects.constants.Resources;
 import com.tanks.objects.statics.Rotator;
 
 public class Shell extends Piece {

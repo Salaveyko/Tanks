@@ -1,6 +1,6 @@
 package com.tanks.objects.statics;
 
-import com.tanks.objects.constants.Const;
+import com.tanks.constants.Const;
 import com.tanks.objects.piece.Piece;
 import com.tanks.objects.piece.Shell;
 

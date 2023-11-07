@@ -1,14 +1,20 @@
 package com.tanks.objects.piece;
 
+import com.tanks.constants.Const;
+import com.tanks.constants.Resources;
+import com.tanks.events.AmAliveEvent;
+import com.tanks.events.AmAliveListener;
 import com.tanks.objects.Direction;
-import com.tanks.objects.constants.Const;
-import com.tanks.objects.constants.Resources;
 import com.tanks.objects.statics.Rotator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tank extends Piece {
     private int lives;
     private int hits;
     private boolean canShot;
+    private List<AmAliveListener> amAliveListeners;
 
     public Tank(int x, int y, String imgPath, Direction direction, int lives, int hits) {
         super(
@@ -18,6 +24,7 @@ public class Tank extends Piece {
         this.lives = lives;
         this.hits = hits;
         this.canShot = true;
+        amAliveListeners = new ArrayList<>();
 
         turn(direction);
     }
@@ -28,6 +35,7 @@ public class Tank extends Piece {
 
     public void setLives(int lives) {
         this.lives = lives;
+        fireAmAliveEvent();
     }
 
     public int getHits() {
@@ -94,4 +102,23 @@ public class Tank extends Piece {
         }).start();
     }
 
+    public void addAmAliveListener(AmAliveListener listener){
+        amAliveListeners.add(listener);
+        fireAmAliveEvent();
+    }
+
+    public List<AmAliveListener> getAmAliveListeners(){
+        return amAliveListeners;
+    }
+
+    public void removeAmAliveListener(AmAliveListener listener){
+        amAliveListeners.remove(listener);
+    }
+
+    protected void fireAmAliveEvent(){
+        AmAliveEvent e = new AmAliveEvent(this);
+        for(AmAliveListener listener : amAliveListeners){
+            listener.amAlive(e);
+        }
+    }
 }

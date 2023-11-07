@@ -2,7 +2,7 @@ package com.tanks.objects.piece;
 
 import com.tanks.objects.Direction;
 
-public class Eagle extends Brick{
+public class Eagle extends Brick {
     private Tank owner;
 
     public Eagle(int x, int y, String imgPath, Direction direction, Tank owner) {

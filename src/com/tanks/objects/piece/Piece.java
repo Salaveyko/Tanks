@@ -1,8 +1,8 @@
 package com.tanks.objects.piece;
 
+import com.tanks.constants.Const;
 import com.tanks.objects.Coordinates;
 import com.tanks.objects.Direction;
-import com.tanks.objects.constants.Const;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -141,6 +141,7 @@ public abstract class Piece  implements Serializable {
         }
     }
 
+    @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         if(img != null){
@@ -155,6 +156,7 @@ public abstract class Piece  implements Serializable {
             ImageIO.write(bufImg, "png", out);
         }
     }
+    @Serial
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 

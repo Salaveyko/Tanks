@@ -1,7 +1,9 @@
-package com.tanks.objects;
+package com.tanks.panels;
 
-import com.tanks.objects.constants.Const;
-import com.tanks.objects.constants.Resources;
+import com.tanks.constants.Const;
+import com.tanks.constants.Resources;
+import com.tanks.objects.Direction;
+import com.tanks.objects.GameMap;
 import com.tanks.objects.piece.*;
 import com.tanks.objects.statics.Move;
 
@@ -29,15 +31,16 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
     private final List<Shell> shells;
 
     public BattleField() {
-        gameOver = false;
-
+        setPreferredSize(new Dimension(Const.FIELD_WIDTH, Const.FIELD_HEIGHT));
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
 
+        gameOver = false;
+
         keysPressed = new HashSet<>();
+
         gameMap = new GameMap();
-        //gameMap.saveGameMap(Resources.LVL_ROOT + "1.lvl");
         gameMap.loadGameMap(Resources.LVL_ROOT + "1.lvl");
         shells = new LinkedList<>();
         tanks = new LinkedList<>();
@@ -51,13 +54,29 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
         timer.start();
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public Tank getPlayer1() {
+        return player1;
+    }
+
+    public Tank getPlayer2() {
+        return player2;
+    }
+
+    public List<Tank> getTanks() {
+        return tanks;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         //background
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, Const.FIELD_WIDTH, Const.FIELD_HEIGHT);
+        g.fillRect(0, 0, getWidth(), getHeight());
 
         //map
         gameMap.paint(g);
@@ -84,6 +103,7 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
             if (!b.isSolid()) {
                 if (piece instanceof Eagle) {
                     gameOver = true;
+                    ((Eagle) piece).getOwner().setLives(0);
                 }
                 gameMap.removeBrick(b);
             }
@@ -156,38 +176,38 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
     private void updateMoves() {
         //player 1 controls
         if (player1.getLives() > 0) {
-            if (keysPressed.contains(KeyEvent.VK_UP) && !player1.turn(Direction.UP)) {
+            if (keysPressed.contains(KeyEvent.VK_W) && !player1.turn(Direction.UP)) {
                 movePiece(player1);
             }
-            if (keysPressed.contains(KeyEvent.VK_RIGHT) && !player1.turn(Direction.RIGHT)) {
+            if (keysPressed.contains(KeyEvent.VK_D) && !player1.turn(Direction.RIGHT)) {
                 movePiece(player1);
             }
-            if (keysPressed.contains(KeyEvent.VK_DOWN) && !player1.turn(Direction.DOWN)) {
+            if (keysPressed.contains(KeyEvent.VK_S) && !player1.turn(Direction.DOWN)) {
                 movePiece(player1);
             }
-            if (keysPressed.contains(KeyEvent.VK_LEFT) && !player1.turn(Direction.LEFT)) {
+            if (keysPressed.contains(KeyEvent.VK_A) && !player1.turn(Direction.LEFT)) {
                 movePiece(player1);
             }
-            if (keysPressed.contains(KeyEvent.VK_SPACE)) {
+            if (keysPressed.contains(KeyEvent.VK_SHIFT)) {
                 shotHim(player1);
             }
         }
 
         //player 2 controls
         if (player2.getLives() > 0) {
-            if (keysPressed.contains(KeyEvent.VK_W) && !player2.turn(Direction.UP)) {
+            if (keysPressed.contains(KeyEvent.VK_UP) && !player2.turn(Direction.UP)) {
                 movePiece(player2);
             }
-            if (keysPressed.contains(KeyEvent.VK_D) && !player2.turn(Direction.RIGHT)) {
+            if (keysPressed.contains(KeyEvent.VK_RIGHT) && !player2.turn(Direction.RIGHT)) {
                 movePiece(player2);
             }
-            if (keysPressed.contains(KeyEvent.VK_S) && !player2.turn(Direction.DOWN)) {
+            if (keysPressed.contains(KeyEvent.VK_DOWN) && !player2.turn(Direction.DOWN)) {
                 movePiece(player2);
             }
-            if (keysPressed.contains(KeyEvent.VK_A) && !player2.turn(Direction.LEFT)) {
+            if (keysPressed.contains(KeyEvent.VK_LEFT) && !player2.turn(Direction.LEFT)) {
                 movePiece(player2);
             }
-            if (keysPressed.contains(KeyEvent.VK_SHIFT)) {
+            if (keysPressed.contains(KeyEvent.VK_SPACE)) {
                 shotHim(player2);
             }
         }
@@ -197,7 +217,7 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
     private void shotHim(Tank t) {
         if (t.CanShot() && !gameOver) {
-            shells.add(new Shell(player2));
+            shells.add(new Shell(t));
             t.setCanShot(false);
             t.startCooldown();
         }
