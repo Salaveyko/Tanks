@@ -5,6 +5,10 @@ import com.tanks.objects.Direction;
 public class Eagle extends Brick {
     private Tank owner;
 
+    public Eagle(int x, int y, String imgPath, Direction direction) {
+        this(x, y, imgPath, direction, null);
+    }
+
     public Eagle(int x, int y, String imgPath, Direction direction, Tank owner) {
         super(x, y, imgPath, direction, false);
 

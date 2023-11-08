@@ -2,8 +2,9 @@ package com.tanks.panels;
 
 import com.tanks.constants.Const;
 import com.tanks.constants.Resources;
+import com.tanks.map.GameMap;
+import com.tanks.map.MapLoader;
 import com.tanks.objects.Direction;
-import com.tanks.objects.GameMap;
 import com.tanks.objects.piece.*;
 import com.tanks.objects.statics.Move;
 
@@ -40,8 +41,9 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
         keysPressed = new HashSet<>();
 
-        gameMap = new GameMap();
-        gameMap.loadGameMap(Resources.LVL_ROOT + "1.lvl");
+        //gameMap = MapLoader.loadDefaultMap();
+        gameMap = MapLoader.loadGameMap(Resources.LVL_ROOT + "1.lvl");
+        //MapLoader.saveGameMap(gameMap, Resources.LVL_ROOT + "1.lvl");
         shells = new LinkedList<>();
         tanks = new LinkedList<>();
 
@@ -68,6 +70,10 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
     public List<Tank> getTanks() {
         return tanks;
+    }
+
+    public String getMapName() {
+        return gameMap.getName();
     }
 
     @Override
@@ -225,14 +231,14 @@ public class BattleField extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-            //update shells positions
-            for (int i = 0; i < shells.size(); i++) {
-                movePiece(shells.get(i));
-            }
-            //updating players positions
-            updateMoves();
+        //update shells positions
+        for (int i = 0; i < shells.size(); i++) {
+            movePiece(shells.get(i));
+        }
+        //updating players positions
+        updateMoves();
 
-            repaint();
+        repaint();
     }
 
     @Override

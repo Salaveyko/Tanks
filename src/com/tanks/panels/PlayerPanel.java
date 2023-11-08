@@ -9,7 +9,7 @@ import com.tanks.objects.piece.Tank;
 import javax.swing.*;
 import java.awt.*;
 
-public class PlayerPanel extends JPanel implements AmAliveListener {
+public class PlayerPanel extends CustomPanel implements AmAliveListener {
     private final JPanel heartsPanel;
 
     public PlayerPanel(String tankIcon) {
@@ -30,10 +30,6 @@ public class PlayerPanel extends JPanel implements AmAliveListener {
         add(heartsPanel);
     }
 
-    public JPanel getHeartsPanel() {
-        return heartsPanel;
-    }
-
     private Icon scaledIcon(String path){
         ImageIcon originalIcon = new ImageIcon(path);
         Image scaledImage = originalIcon.getImage().getScaledInstance(
@@ -52,14 +48,6 @@ public class PlayerPanel extends JPanel implements AmAliveListener {
 
         revalidate();
         repaint();
-    }
-
-    @Override
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-
-        g.setColor(Const.INFO_PANEL_BACKGROUND);
-        g.fillRect(0, 0, getWidth(), getHeight());
     }
 
     @Override

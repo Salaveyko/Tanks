@@ -6,7 +6,7 @@ import com.tanks.constants.Resources;
 import javax.swing.*;
 import java.awt.*;
 
-public class InfoPanel extends JPanel {
+public class InfoPanel extends CustomPanel {
 
     private final BattleField battleField;
 
@@ -16,7 +16,20 @@ public class InfoPanel extends JPanel {
 
         this.battleField = battleField;
 
+        setNamePanel();
         setLivesPanel();
+    }
+
+    private void setNamePanel(){
+        JLabel mapNameLabel = new JLabel(battleField.getMapName());
+        mapNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        mapNameLabel.setForeground(Color.WHITE);
+
+        JPanel mapNamePanel = new CustomPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        mapNamePanel.setMaximumSize(new Dimension(Const.INFO_PANEL_WIDTH, 50));
+        mapNamePanel.add(mapNameLabel);
+
+        add(mapNamePanel);
     }
 
     private void setLivesPanel(){
@@ -26,28 +39,12 @@ public class InfoPanel extends JPanel {
         PlayerPanel p2Lives = new PlayerPanel(Resources.SILVER_TANK_IMG);
         battleField.getPlayer2().addAmAliveListener(p2Lives);
 
-        JPanel livesPanel = new JPanel(){
-            @Override
-            public void paintComponent(Graphics g){
-                super.paintComponent(g);
-
-                g.setColor(Const.INFO_PANEL_BACKGROUND);
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
+        JPanel livesPanel = new CustomPanel();
         livesPanel.setMaximumSize(new Dimension(Const.INFO_PANEL_WIDTH, 120));
         livesPanel.setLayout(new BoxLayout(livesPanel, BoxLayout.Y_AXIS));
         livesPanel.add(p1Lives);
         livesPanel.add(p2Lives);
 
         add(livesPanel);
-    }
-
-    @Override
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-
-        g.setColor(Const.INFO_PANEL_BACKGROUND);
-        g.fillRect(0, 0, getWidth(), getHeight());
     }
 }
